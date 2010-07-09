@@ -38,6 +38,8 @@ Status
 After installing Erjang and building Reia, rake will attempt to run the Reia
 test suite on top of Erjang.  Presently, this is failing: 
 
-SEVERE: cannot load module 'src/builtins/atom'
+INFO: MISSING os:getenv/0
 
-This is likely due to path problems between Erjang and Reia.
+Erjang does not implement this function, which Reia uses to locate its home
+directory.  Either Erjang needs to implement this or a workaround in Reia is
+needed.
