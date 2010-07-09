@@ -6,8 +6,8 @@ That's right folks, you've just entered crazytown!
 
 More on Reia:
 
-[http://reia-lang.org](http://reia-lang.org)
-[http://github.com/tarcieri/reia](http://github.com/tarcieri/reia)
+* [http://reia-lang.org](http://reia-lang.org)
+* [http://github.com/tarcieri/reia](http://github.com/tarcieri/reia)
 
 How?
 ----
