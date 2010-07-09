@@ -9,10 +9,16 @@ ERJANG_TARBALL="#{ERJANG_HOME}.tgz"
 ERJANG_DISTRIBUTION="http://cloud.github.com/downloads/krestenkrab/erjang/#{ERJANG_TARBALL}"
 ERJANG_SHA256="4a28b6953f4ff0259c3e807fb2947a5e8e374580b7aed47ad09e30ab5aa3d05e"
 
-task :default => :erjang
+task :default => [:erjang, :reia, :build]
+
+# Helpers
 
 def got_curl?
   !!`curl 2>&1`['curl: try'] # doublebang it!
+end
+
+def got_git?
+  !!`git`["usage: git"]
 end
 
 def download(url, dest)
@@ -28,11 +34,19 @@ def sha256(path)
   digest.hexdigest
 end
 
+def announce(something)
+  puts "\n*** #{something}"
+end
+
+# Erjang stuff
+
+task :erjang => [ERJANG_TARBALL, ERJANG_HOME]
+
 file ERJANG_TARBALL do
-  puts "*** Fetching the Erjang distribution"
+  announce "Fetching the Erjang distribution"
   download ERJANG_DISTRIBUTION, ERJANG_TARBALL
   
-  print "*** Checksumming Erjang distribution... "
+  print "\n*** Checksumming Erjang distribution... "
   if sha256(ERJANG_TARBALL) == ERJANG_SHA256
     puts "ok."
   else
@@ -41,15 +55,28 @@ file ERJANG_TARBALL do
 end
 
 file ERJANG_HOME => ERJANG_TARBALL do
-  puts "*** Unpacking Erjang"
+  announce "Unpacking Erjang"
   system "tar -zxf #{ERJANG_TARBALL}"
   
-  puts "*** Configuring Erjang"
+  announce "Configuring Erjang"
   sh "cd #{ERJANG_HOME} && echo 'y' | ./Install `pwd`"
   puts 'y'
 end
 
-task :erjang => [ERJANG_TARBALL, ERJANG_HOME]
+# Reia stuff
+
+file :reia do
+  raise "No git? How did you even get ahold of this?" unless got_git?
+  
+  announce "Cloning Reia from Github"
+  sh "git clone git://github.com/tarcieri/reia.git"
+end
+
+task :build => :reia do
+  announce "Building Reia"
+  sh "cd reia && rake"
+end
 
 CLEAN.include ERJANG_TARBALL
 CLEAN.include ERJANG_HOME
+CLEAN.include 'reia'
