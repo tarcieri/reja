@@ -59,7 +59,7 @@ file ERJANG_HOME => ERJANG_TARBALL do
   system "tar -zxf #{ERJANG_TARBALL}"
   
   announce "Configuring Erjang"
-  sh "cd #{ERJANG_HOME} && echo 'y' | ./Install `pwd`"
+  sh "echo 'y' | #{ERJANG_HOME}/Install #{File.expand_path ERJANG_HOME}"
   puts 'y'
 end
 
@@ -78,6 +78,12 @@ task :build => :reia do
   
   announce "Building Reia"
   sh "cd reia && rake"
+  
+  announce "Installing Reia"
+  reia_dir = "#{ERJANG_HOME}/lib/reia"
+  rm_r reia_dir if File.exists?(reia_dir)
+  mkdir_p reia_dir
+  cp_r "reia/ebin", reia_dir
 end
 
 task :test do
