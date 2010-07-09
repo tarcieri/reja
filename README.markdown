@@ -12,12 +12,13 @@ More on Reia:
 How?
 ----
 
-Type 'rake' and be amazed.  Hopefully.
+Type 'rake' and be amazed.  Hopefully.  Rake will download and install both
+Erjang and Reia underneath the current directory.
 
 What do I need?
 ---------------
 
-Oof, you'll need a lot of stuff! Here's a quick list:
+You'll need a lot of stuff! Here's a quick list:
 
 * Ruby
 * Rake
