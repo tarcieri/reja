@@ -27,6 +27,11 @@ You'll need a lot of stuff! Here's a quick list:
 * curl
 * git
 
+Is this production ready?
+-------------------------
+
+Bwahahahahahahahahahahahahahahahaha!
+
 Status
 ------
 
