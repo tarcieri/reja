@@ -9,7 +9,7 @@ ERJANG_TARBALL="#{ERJANG_HOME}.tgz"
 ERJANG_DISTRIBUTION="http://cloud.github.com/downloads/krestenkrab/erjang/#{ERJANG_TARBALL}"
 ERJANG_SHA256="4a28b6953f4ff0259c3e807fb2947a5e8e374580b7aed47ad09e30ab5aa3d05e"
 
-task :default => [:erjang, :reia, :build]
+task :default => [:erjang, :reia, :build, :test]
 
 # Helpers
 
@@ -73,8 +73,16 @@ file :reia do
 end
 
 task :build => :reia do
+  announce "Ensure Reia is up-to-date..."
+  sh "cd reia && git pull"
+  
   announce "Building Reia"
   sh "cd reia && rake"
+end
+
+task :test do
+  announce "Running Reia tests"
+  sh "cd reia && ../bin/reia test/runner.re"
 end
 
 CLEAN.include ERJANG_TARBALL

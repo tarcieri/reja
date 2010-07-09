@@ -25,3 +25,13 @@ Oof, you'll need a lot of stuff! Here's a quick list:
 * Java
 * curl
 * git
+
+Status
+------
+
+After installing Erjang and building Reia, rake will attempt to run the Reia
+test suite on top of Erjang.  Presently, this is failing: 
+
+SEVERE: cannot load module 'src/builtins/atom'
+
+This is likely due to path problems between Erjang and Reia.

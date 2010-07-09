@@ -1,0 +1,14 @@
+#!/bin/sh
+
+USAGE="Usage: `basename $0` file.re"
+ERL="../erjang-0.2/bin/erl"
+
+if [ $# -eq 0 ]; then
+	echo $USAGE >&2
+	exit 1
+fi
+
+PROGRAM=$1
+shift
+
+$ERL -pz ebin -noshell +K true -s reia init -s reia_internal execute_file $PROGRAM -s init stop -extra $*
