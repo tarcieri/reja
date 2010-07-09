@@ -1,7 +1,10 @@
 #!/bin/sh
 
+export ERJANG_HOME="erjang-0.2"
+export REIA_HOME="reia"
+
 USAGE="Usage: `basename $0` file.re"
-ERL="../erjang-0.2/bin/erl"
+ERL="$ERJANG_HOME/bin/erl"
 
 if [ $# -eq 0 ]; then
 	echo $USAGE >&2
@@ -11,4 +14,4 @@ fi
 PROGRAM=$1
 shift
 
-$ERL -pz ebin -noshell +K true -s reia init -s reia_internal execute_file $PROGRAM -s init stop -extra $*
+$ERL -pz reia/ebin -noshell +K true -s reia init -s reia_internal execute_file $PROGRAM -s init stop -extra $*

@@ -82,7 +82,7 @@ end
 
 task :test do
   announce "Running Reia tests"
-  sh "cd reia && ../bin/reia test/runner.re"
+  sh "bin/reia test/runner.re"
 end
 
 CLEAN.include ERJANG_TARBALL
