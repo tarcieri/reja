@@ -40,10 +40,16 @@ file ERJANG_TARBALL do
   end
 end
 
-task :erjang => ERJANG_TARBALL do
+file ERJANG_HOME => ERJANG_TARBALL do
   puts "*** Unpacking Erjang"
   system "tar -zxf #{ERJANG_TARBALL}"
+  
+  puts "*** Configuring Erjang"
+  sh "cd #{ERJANG_HOME} && echo 'y' | ./Install `pwd`"
+  puts 'y'
 end
+
+task :erjang => [ERJANG_TARBALL, ERJANG_HOME]
 
 CLEAN.include ERJANG_TARBALL
 CLEAN.include ERJANG_HOME
