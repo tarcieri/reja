@@ -28,7 +28,7 @@ end
 
 def sha256(path)
   digest = Digest::SHA256.new
-  File.open("erjang-0.2.tgz") do |file|
+  File.open(path) do |file|
     while data = file.read(4096); digest << data; end
   end
   digest.hexdigest
