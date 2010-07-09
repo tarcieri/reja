@@ -38,8 +38,7 @@ Status
 After installing Erjang and building Reia, rake will attempt to run the Reia
 test suite on top of Erjang.  Presently, this is failing: 
 
-INFO: MISSING os:getenv/0
+  SEVERE: cannot load module 'src/builtins/atom'
+  java.io.FileNotFoundException: .erj/src/builtins/atom-7b5394b7.jar (No such file or directory)
 
-Erjang does not implement this function, which Reia uses to locate its home
-directory.  Either Erjang needs to implement this or a workaround in Reia is
-needed.
+Reia is crashing while attempting to load its builtin types.
