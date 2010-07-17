@@ -4,93 +4,78 @@
 require 'rake/clean'
 require 'digest/sha1'
 
-ERJANG_HOME="erjang-0.2"
-ERJANG_TARBALL="#{ERJANG_HOME}.tgz"
-ERJANG_DISTRIBUTION="http://cloud.github.com/downloads/krestenkrab/erjang/#{ERJANG_TARBALL}"
-ERJANG_SHA256="4a28b6953f4ff0259c3e807fb2947a5e8e374580b7aed47ad09e30ab5aa3d05e"
-
-task :default => [:erjang, :reia, :build, :test]
+task :default => [:build_erjang, :build_reia, :install_reia, :test]
 
 # Helpers
-
-def got_curl?
-  !!`curl 2>&1`['curl: try'] # doublebang it!
+module Tty extend self
+  def blue; bold 34; end
+  def white; bold 39; end
+  def red; underline 31; end
+  def reset; escape 0; end
+  def bold n; escape "1;#{n}" end
+  def underline n; escape "4;#{n}" end
+  def escape n; "\033[#{n}m" if STDOUT.tty? end
 end
 
 def got_git?
-  !!`git`["usage: git"]
+  !!`git`["usage: git"] # doublebang it!
 end
 
-def download(url, dest)
-  raise "You don't have curl. WTF?" unless got_curl?
-  system "curl #{url} -o #{dest}"
+def clone(repo)
+  raise "No git? How did you even get ahold of this?" unless got_git?
+  
+  name = repo.match(/(\w+)\.git/)[1]
+  ohai "Cloning #{name} from Github"
+  sh "git clone #{repo}"
 end
 
-def sha256(path)
-  digest = Digest::SHA256.new
-  File.open(path) do |file|
-    while data = file.read(4096); digest << data; end
-  end
-  digest.hexdigest
+def ensure_up2date(name)
+  ohai "Ensuring #{name.capitalize} is up-to-date"
+  sh "cd #{name} && git pull"
 end
 
-def announce(something)
-  puts "\n*** #{something}"
+def ohai(something)
+  puts "#{Tty.blue}*** #{Tty.white}#{something}#{Tty.reset}"
 end
 
 # Erjang stuff
 
-task :erjang => [ERJANG_TARBALL, ERJANG_HOME]
-
-file ERJANG_TARBALL do
-  announce "Fetching the Erjang distribution"
-  download ERJANG_DISTRIBUTION, ERJANG_TARBALL
-  
-  print "\n*** Checksumming Erjang distribution... "
-  if sha256(ERJANG_TARBALL) == ERJANG_SHA256
-    puts "ok."
-  else
-    puts "MISMATCH. Proceed at your own risk!"
-  end
+file :erjang do
+  clone "git://github.com/krestenkrab/erjang.git"
 end
 
-file ERJANG_HOME => ERJANG_TARBALL do
-  announce "Unpacking Erjang"
-  system "tar -zxf #{ERJANG_TARBALL}"
+task :build_erjang => :erjang do
+  ensure_up2date "erjang"
   
-  announce "Configuring Erjang"
-  sh "echo 'y' | #{ERJANG_HOME}/Install #{File.expand_path ERJANG_HOME}"
-  puts 'y'
+  ohai "Building Erjang"
+  sh "cd erjang && ant jar"
 end
 
 # Reia stuff
 
 file :reia do
-  raise "No git? How did you even get ahold of this?" unless got_git?
-  
-  announce "Cloning Reia from Github"
-  sh "git clone git://github.com/tarcieri/reia.git"
+  ohai "Cloning Reia from Github"
+  clone "git://github.com/tarcieri/reia.git"
 end
 
-task :build => :reia do
-  announce "Ensure Reia is up-to-date..."
-  sh "cd reia && git pull"
+task :build_reia => :reia do
+  ensure_up2date "reia"
   
-  announce "Building Reia"
-  sh "cd reia && rake"
-  
-  announce "Installing Reia"
-  reia_dir = "#{ERJANG_HOME}/lib/reia"
+  ohai "Building Reia"
+  sh "cd reia && rake"  
+end
+
+task :install_reia do
+  ohai "Installing Reia"
+  reia_dir = "erjang/lib/reia"
   rm_r reia_dir if File.exists?(reia_dir)
   mkdir_p reia_dir
   cp_r "reia/ebin", reia_dir
 end
 
 task :test do
-  announce "Running Reia tests"
+  ohai "Running Reia tests"
   sh "bin/reia test/runner.re"
 end
 
-CLEAN.include ERJANG_TARBALL
-CLEAN.include ERJANG_HOME
-CLEAN.include 'reia'
+CLEAN.include 'erjang', 'reia'

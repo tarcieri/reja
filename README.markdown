@@ -22,10 +22,10 @@ You'll need a lot of stuff! Here's a quick list:
 
 * Ruby
 * Rake
-* Erlang 5.6.3+ (R12B-3)
 * Java
-* curl
+* ant
 * git
+* Erlang 5.6.3+ (R12B-3)
 
 Is this production ready?
 -------------------------
