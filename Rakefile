@@ -7,7 +7,9 @@ require 'digest/sha1'
 task :default => [:build_erjang, :build_reia, :install_reia, :test]
 
 # Helpers
+
 module Tty extend self
+  # The colors, Duke! The colors!l
   def blue; bold 34; end
   def white; bold 39; end
   def red; underline 31; end
@@ -25,7 +27,7 @@ def clone(repo)
   raise "No git? How did you even get ahold of this?" unless got_git?
   
   name = repo.match(/(\w+)\.git/)[1]
-  ohai "Cloning #{name} from Github"
+  ohai "Cloning #{name.capitalize} from Github"
   sh "git clone #{repo}"
 end
 
@@ -54,7 +56,6 @@ end
 # Reia stuff
 
 file :reia do
-  ohai "Cloning Reia from Github"
   clone "git://github.com/tarcieri/reia.git"
 end
 
