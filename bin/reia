@@ -1,8 +1,8 @@
 #!/bin/sh
 
 USAGE="Usage: `basename $0` file.re"
-ERJANG_HOME="erjang-0.2"
-ERL="$ERJANG_HOME/bin/erl"
+ERJANG_HOME="erjang"
+ERL="$ERJANG_HOME/ej"
 
 if [ $# -eq 0 ]; then
 	echo $USAGE >&2
