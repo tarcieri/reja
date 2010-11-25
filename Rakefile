@@ -43,7 +43,7 @@ end
 # Erjang stuff
 
 file :erjang do
-  clone "git://github.com/krestenkrab/erjang.git"
+  clone "git://github.com/trifork/erjang.git"
 end
 
 task :build_erjang => :erjang do
