@@ -36,8 +36,23 @@ def ensure_up2date(name)
   sh "cd #{name} && git pull"
 end
 
+# OHAI!
 def ohai(something)
   puts "#{Tty.blue}*** #{Tty.white}#{something}#{Tty.reset}"
+end
+
+# Retrieve the ERTS version
+def erts_version
+  version = `erl -version 2>&1`.strip[/\d+\.\d+\.\d+$/]
+  raise "Couldn't determine Erlang version" unless version
+  version
+end
+
+# Retrieve the Erlang home directory
+def erlang_home
+  erl_home = `erl -noshell -eval "io:format(code:lib_dir())" -s erlang halt`
+  raise "Couldn't locate erlang_home directory" unless erl_home[/^\//]
+  erl_home.sub(/\/lib\/erlang\/lib\/?/, '')
 end
 
 # Erjang stuff
@@ -51,6 +66,13 @@ task :build_erjang => :erjang do
   
   ohai "Building Erjang"
   sh "cd erjang && ant jar"
+  ohai "Doctoring erjang/env_cfg to include your Erlang libraries"
+  
+  env_cfg = "erjang/env_cfg"
+  cfg = File.read env_cfg
+  cfg.sub!(/ERTS_VSN=.*$/, "ERTS_VSN=#{erts_version}")
+  cfg.sub!(/ERL_ROOT=.*$/, "ERL_ROOT=#{erlang_home}")
+  File.open(env_cfg, 'w') { |file| file << cfg }
 end
 
 # Reia stuff
