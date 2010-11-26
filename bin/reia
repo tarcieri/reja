@@ -12,4 +12,4 @@ fi
 PROGRAM=$1
 shift
 
-$ERL -noshell +K true -s reia init -s reia_internal execute_file $PROGRAM -s init stop -extra $*
+$ERL -noshell +K true -pa reia/ebin -s reia init -s reia_internal execute_file $PROGRAM -s init stop -extra $*
