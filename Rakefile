@@ -50,9 +50,12 @@ end
 
 # Retrieve the Erlang home directory
 def erlang_home
-  erl_home = `erl -noshell -eval "io:format(code:lib_dir())" -s erlang halt`
-  raise "Couldn't locate erlang_home directory" unless erl_home[/^\//]
-  erl_home.sub(/\/lib\/erlang\/lib\/?/, '')
+  # FIXME: Meh, tried to autodetect this and failed
+  #erl_home = `erl -noshell -eval "io:format(code:lib_dir())" -s erlang halt`
+  #raise "Couldn't locate erlang_home directory" unless erl_home[/^\//]
+  #erl_home
+  
+  "/usr/local/lib/erlang"
 end
 
 # Erjang stuff
